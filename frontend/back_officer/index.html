@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Officer Portal — Home</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Event Officer Portal</h1>
+    <nav class="nav">
+      <a href="customers.html">Customers</a>
+      <a href="manage_reservations.html">Manage Reservations</a>
+      <a href="payment_confirmation.html">Payment Confirmation</a>
+      <a href="invitation.html">Invitation</a>
+      <a href="scanner.html">QR Scanner</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h2>Welcome</h2>
+      <p>This portal helps back officers manage customers, reservations, payments, invitations and scan QR tickets at the gate.</p>
+      <ul>
+        <li>Open <strong>Customers</strong> to search & paginate the customer list.</li>
+        <li>Open <strong>QR Scanner</strong> to scan and validate tickets.</li>
+        <li>Other pages are placeholders for future features.</li>
+      </ul>
+    </section>
+    <div id="promoCounter" style="
+        margin:20px 0;
+        padding:15px;
+        background:#fff;
+        border:1px solid #ddd;
+        border-radius:8px;
+        font-weight:bold;
+      ">
+        Loading promo ticket status...
+    </div>
+
+  </main>
+  <script>
+    fetch('/auth/check')
+      .then(r => r.json())
+      .then(d => {
+        if (!d.loggedIn) {
+          window.location.href = 'login.html';
+        }
+      });
+  </script>
+<script>
+  async function loadPromoCounter() {
+    try {
+      const res = await fetch('/reservations/availability');
+      const data = await res.json();
+  
+      if (!data.success) return;
+  
+      const box = document.getElementById('promoCounter');
+  
+      const PROMO_LIMIT = 250;
+      const used = PROMO_LIMIT - data.promo_remaining;
+  
+      if (data.promo_sold_out) {
+        box.innerHTML = `🚫 Promo Tickets SOLD OUT (${PROMO_LIMIT} / ${PROMO_LIMIT})`;
+        box.style.color = '#9C0006';
+      } else {
+        box.innerHTML = `🎟 Promo Tickets: ${used} / ${PROMO_LIMIT} used`;
+        box.style.color = '#333';
+      }
+  
+    } catch (e) {
+      console.error('Failed loading promo counter', e);
+    }
+  }
+  
+  loadPromoCounter();
+</script>
+  
+    
+    
+</body>
+</html>

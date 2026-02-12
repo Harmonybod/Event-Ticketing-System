@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addis Old School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+    /* --- CSS VARIABLES & RESET --- */
+    :root {
+        --light-bg: #F0F2F5;
+        --medium-gray: #A8A9AD;
+        --dark-gray: #7A7978;
+        --deep-red: #9C0006;
+        --medium-red: #BF2626;
+        --bright-red: #EB5252;
+        --white: #ffffff;
+        --text-color: #333333;
+        --whatsapp-green: #25D366;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        background-color: var(--light-bg);
+        color: var(--text-color);
+        line-height: 1.6;
+        font-size: 16px; 
+    }
+
+    /* --- NAVIGATION --- */
+    .navbar {
+        background-color: var(--white);
+        padding: 1rem 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        width: 100%;
+    }
+
+    .logo {
+        color: var(--deep-red);
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        white-space: nowrap;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: var(--dark-gray);
+        margin-left: 20px;
+        font-weight: 600;
+        transition: color 0.3s;
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+        color: var(--bright-red);
+    }
+
+    /* --- HERO SECTION --- */
+    .hero {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('./5909095527616285762_121.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; 
+        padding: 8rem 5% 6rem 5%;
+        text-align: center;
+        color: var(--white);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh; 
+    }
+
+    .hero h1 {
+        color: var(--white);
+        font-size: clamp(2.5rem, 8vw, 4.5rem); 
+        margin-bottom: 1rem;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        letter-spacing: 1px;
+        line-height: 1.1;
+    }
+
+    .hero p {
+        color: #e0e0e0;
+        max-width: 700px;
+        margin: 0 auto 2.5rem auto;
+        font-size: clamp(1rem, 4vw, 1.25rem);
+        font-weight: 300;
+    }
+
+    .hero > div {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
+    /* --- BUTTONS --- */
+    .btn-main {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--bright-red), var(--deep-red));
+        color: var(--white);
+        padding: 16px 35px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        text-transform: uppercase;
+        border: none;
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        min-width: 180px;
+    }
+
+    .btn-main:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.5);
+    }
+    
+    .btn-main i { margin-right: 8px; }
+
+    /* --- TICKETS SECTION --- */
+    .section-container {
+        padding: 4rem 5%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .pricing-container {
+        display: none; 
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap; 
+        margin-top: 2rem;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .flashcard {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 380px;
+        box-shadow: var(--card-shadow);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+    .flashcard:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+
+    .flashcard h3 {
+        color: var(--dark-gray);
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .price {
+        font-size: 2.8rem;
+        color: var(--deep-red);
+        font-weight: 800;
+        margin: 1rem 0;
+    }
+
+    .flashcard.promo {
+        border-top: 6px solid var(--bright-red);
+    }
+    
+    .promo-highlight {
+        color: var(--bright-red);
+        font-weight: bold;
+        font-size: 0.85rem;
+        background: #fff0f0;
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+    }
+
+    .flashcard-details p {
+        margin-bottom: 10px;
+        color: #666;
+        display: flex;
+        align-items: center;
+    }
+    .flashcard-details i {
+        color: var(--medium-red);
+        margin-right: 10px;
+        width: 20px; 
+        text-align: center;
+    }
+
+    .card-btn {
+        margin-top: 20px;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+        width: 100%;
+    }
+
+    .btn-promo {
+        background-color: var(--deep-red);
+        color: white;
+    }
+    .btn-promo:hover { background-color: var(--medium-red); }
+
+    /* --- REGULAR TICKET STYLING (LOCKED) --- */
+    .flashcard.regular {
+        background-color: #f9f9f9;
+        border-color: #e0e0e0;
+        filter: grayscale(100%);
+        opacity: 0.7;
+        cursor: not-allowed;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .flashcard.regular .price {
+        color: #ccc;
+        letter-spacing: 5px;
+    }
+    
+    .flashcard.regular h3 {
+        color: #999;
+    }
+
+    .btn-regular {
+        background-color: #ccc;
+        color: #fff;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .flashcard.regular:hover {
+        transform: none;
+        box-shadow: var(--card-shadow);
+    }
+
+    .flashcard.regular::after {
+        content: "\f05e";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 6rem;
+        color: #333;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+        pointer-events: none;
+    }
+    .flashcard.regular:hover::after { opacity: 0.8; }
+
+    /* --- INTERACTION BOXES (Form & Agreement) --- */
+    .interaction-box {
+        display: none;
+        width: 100%;
+        max-width: 550px;
+        margin: 40px auto;
+        padding: 30px 20px; 
+        border-radius: 16px;
+        background-color: var(--white);
+        box-shadow: var(--card-shadow);
+        border: 1px solid rgba(0,0,0,0.05);
+        animation: slideUp 0.4s ease-out;
+    }
+
+    .agreement-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        padding: 12px;
+        background: #fafafa;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        transition: border-color 0.2s;
+        cursor: pointer;
+    }
+    .agreement-item:hover { border-color: var(--medium-gray); }
+    
+    .agreement-item input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+        margin-top: 2px;
+        margin-right: 15px;
+        flex-shrink: 0;
+        accent-color: var(--deep-red);
+        cursor: pointer;
+    }
+    .agreement-text { 
+        font-size: 0.95rem; 
+        color: #555; 
+        line-height: 1.4;
+    }
+
+    input[type="text"], input[type="tel"] {
+        width: 100%;
+        padding: 14px;
+        margin-bottom: 15px;
+        border: 1px solid #e1e1e1;
+        border-radius: 8px;
+        background: #fafafa;
+        font-size: 16px; 
+        transition: all 0.3s;
+    }
+    input:focus {
+        border-color: var(--bright-red);
+        background: #fff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(235, 82, 82, 0.1);
+    }
+
+    .agree-btn {
+        background-color: var(--text-color);
+        color: var(--white);
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1rem;
+        margin-top: 15px;
+        transition: background 0.3s;
+    }
+    .agree-btn:hover { background-color: #000; }
+
+    /* --- PAYMENT SECTION STYLING --- */
+    .payment-section {
+        display: none;
+        padding: 4rem 5%;
+        text-align: center;
+        background-color: var(--white);
+        border-top: 1px solid #eee;
+        scroll-margin-top: 80px;
+    }
+
+    .payment-card-style {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px 10px;
+        border-radius: 16px;
+        background: var(--white);
+    }
+
+    /* Ticket Selector in Payment Section */
+    .ticket-selector-box {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #fdfdfd;
+        border: 1px solid #eee;
+        border-radius: 12px;
+    }
+
+    .ticket-limit-note {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(to right, #f8d7da, #fce4ec);
+        color: var(--deep-red);
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px dashed var(--medium-red);
+    }
+
+    .ticket-buttons-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn-select-ticket {
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid var(--deep-red);
+    }
+
+    .btn-select-ticket.primary {
+        background: var(--deep-red);
+        color: white;
+    }
+    .btn-select-ticket.primary:hover { background: var(--medium-red); }
+
+    .btn-select-ticket.secondary {
+        background: white;
+        color: var(--deep-red);
+    }
+    .btn-select-ticket.secondary:hover { background: #fbeaea; }
+
+    /* Multi Ticket Hidden Dropdown */
+    .multi-dropdown-area {
+        display: none;
+        margin-top: 15px;
+        animation: fadeIn 0.3s;
+    }
+    .multi-dropdown-area select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+
+    /* Total Price Display */
+    .total-price-box {
+        display: none; /* Hidden until calculated */
+        background: #333;
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 20px 0;
+        text-align: center;
+    }
+    .total-price-box span {
+        color: #4cd137;
+        font-size: 1.4rem;
+        margin-left: 5px;
+    }
+
+    /* Bank Details (Hidden initially) */
+    .bank-details-wrapper {
+        display: none; /* Hidden until calculation is done */
+        animation: slideUp 0.5s ease;
+    }
+
+    .bank-details {
+        background-color: #f8f9fa;
+        border: 2px dashed var(--medium-gray);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        word-wrap: break-word; 
+    }
+    .bank-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #777;
+        margin-bottom: 5px;
+    }
+    .bank-number {
+        font-size: clamp(1.2rem, 5vw, 1.5rem);
+        font-weight: 800;
+        color: var(--deep-red);
+        font-family: 'Courier New', monospace;
+    }
+
+    .note-box {
+        background: #fff5f5;
+        border-left: 4px solid var(--bright-red);
+        padding: 15px;
+        text-align: left;
+        border-radius: 4px;
+        margin-bottom: 25px;
+        font-size: 0.9rem;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .whatsapp-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--whatsapp-green);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+    }
+    .whatsapp-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        background-color: #1ebe57;
+    }
+    .whatsapp-btn i { font-size: 1.3rem; margin-right: 10px; }
+
+    /* Footer */
+    footer {
+        background-color: #222;
+        color: #888;
+        text-align: center;
+        padding: 2rem;
+        margin-top: 4rem;
+        font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- RESPONSIVE MEDIA QUERIES --- */
+    @media (max-width: 768px) {
+        .navbar {
+            flex-direction: column;
+            padding: 15px;
+            gap: 15px;
+        }
+        
+        .nav-links {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            margin: 0;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 8px 16px;
+        }
+
+        .hero {
+            background-attachment: scroll; 
+            padding-top: 120px; 
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero > div {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn-main {
+            width: 100%;
+        }
+
+        .flashcard {
+            padding: 2rem 1.5rem;
+        }
+        
+        .interaction-box {
+            margin: 20px auto;
+            padding: 25px 15px;
+        }
+    }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-compact-disc"></i> Addis Old School</div>
+        <div class="nav-links">
+            <a href="contactUs.html">Contact Us</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Addis Old School</h1>
+        <p>Welcome to the ultimate sound experience. Join us for an unforgettable night of music, energy, and connection. The best acoustic specialists and vibrant performers await.</p>
+        
+        <div>
+            <button id="buyTicketsButton" class="btn-main">
+                <i class="fas fa-ticket-alt"></i> Buy Tickets
+            </button>
+        </div>
+    </section>
+
+    <section class="section-container" id="tickets">
+        <div class="pricing-container" id="ticketOptions">
+            
+            <div class="flashcard promo">
+                <h3>Promo Ticket</h3>
+                <span class="promo-highlight"><i class="fas fa-exclamation-circle"></i> Limited amount of tickets available</span>
+                <div class="price">5000 ETB</div>
+                
+                <div class="flashcard-details">
+                    <p><i class="fas fa-check"></i> Early bird price</p>
+                    <p><i class="fas fa-check"></i> Limited availability</p>
+                </div>
+
+                <button class="card-btn btn-promo" onclick="startBooking('promo')">Buy Now</button>
+            </div>
+
+            <div class="flashcard regular">
+                <h3>Regular Ticket</h3>
+                <span style="display: block; margin-bottom: 10px; color: #ccc;">Standard Admission</span>
+                <div class="price">----</div>
+                <div class="flashcard-details" style="min-height: 100px; display:flex; align-items:center; justify-content:center;">
+                   <span style="color:#ccc; font-style:italic;">Coming Soon</span>
+                </div>
+                <button class="card-btn btn-regular" onclick="return false;">Select Regular</button>
+            </div>
+        </div>
+
+        <div class="interaction-box" id="agreementBox">
+            <h3 style="margin-bottom: 20px; color:var(--deep-red);">Terms & Conditions</h3>
+            
+            <label class="agreement-item">
+                <input type="checkbox" id="check1">
+                <span class="agreement-text">Use a valid Whatsapp number to receive the entry QR code.</span>
+            </label>
+            <label class="agreement-item">
+                <input type="checkbox" id="check2">
+                <span class="agreement-text">Make sure to take a screenshot of the payment or download the invoice and attach it to whatsapp account below.</span>
+            </label>
+            <label class="agreement-item">
+                <input type="checkbox" id="check3">
+                <span class="agreement-text">Send the payment receipt or verification code screenshot strictly to the WhatsApp number listed below.</span>
+            </label>
+            <label class="agreement-item">
+                <input type="checkbox" id="check4">
+                <span class="agreement-text">You will receive a unique QR code for entry. Please allow up to 24 hours for processing.</span>
+            </label>
+            <label class="agreement-item">
+                <input type="checkbox" id="check5">
+                <span class="agreement-text">Buyers purchasing multiple tickets are solely responsible for distributing them to guests.</span>
+            </label>
+            
+            <button class="agree-btn" onclick="agreeAndProceed()">Agree & Continue</button>
+        </div>
+
+        <div class="interaction-box" id="customerFormBox">
+            <h3 style="margin-bottom: 20px; color:var(--deep-red);">Your Details</h3>
+            <p style="margin-bottom:15px; color:#666;">We need this to verify your payment.</p>
+
+            <label style="font-weight:600; font-size:0.9rem;">Full Name</label>
+            <input type="text" id="custName" placeholder="e.g. Abebe Kebede">
+
+            <label style="font-weight:600; font-size:0.9rem;">Phone Number</label>
+            <input type="tel" id="custPhone" placeholder="+251912..." pattern="^\+[0-9]{8,15}$">
+
+            <button class="agree-btn" onclick="submitCustomerInfo()">
+                Submit & Proceed to Payment
+            </button>
+        </div>
+    </section>
+
+    <section class="payment-section" id="paymentSection">
+        <div class="payment-card-style">
+            <h2 style="margin-bottom: 25px; color: var(--dark-gray);">Complete Your Payment</h2>
+
+            <div class="ticket-selector-box">
+                <div class="ticket-limit-note">
+                    <i class="fas fa-star"></i> You can buy up to 10 tickets per person.
+                </div>
+
+                <div class="ticket-buttons-container">
+                    <button class="btn-select-ticket primary" onclick="setPaymentSingle()">Buy Single Ticket</button>
+                    <button class="btn-select-ticket secondary" onclick="toggleMultiOptions()">Buy Multiple Tickets</button>
+                </div>
+
+                <div class="multi-dropdown-area" id="multiDropdown">
+                    <label style="display:block; margin-bottom:5px; font-weight:bold; color:#555;">Select Quantity:</label>
+                    <select id="ticketQty" onchange="calculateTotal()">
+                        <option value="0" disabled selected>-- Select --</option>
+                        <option value="2">2 Tickets</option>
+                        <option value="3">3 Tickets</option>
+                        <option value="4">4 Tickets</option>
+                        <option value="5">5 Tickets</option>
+                        <option value="6">6 Tickets</option>
+                        <option value="7">7 Tickets</option>
+                        <option value="8">8 Tickets</option>
+                        <option value="9">9 Tickets</option>
+                        <option value="10">10 Tickets</option>
+                    </select>
+                </div>
+
+                <div class="total-price-box" id="totalBox">
+                    Total: <span id="finalPrice">0</span> ETB
+                </div>
+            </div>
+
+            <div class="bank-details-wrapper" id="bankDetailsWrapper">
+                <div class="bank-details">
+                    <div class="bank-label">Commercial Bank of Ethiopia (CBE)</div>
+                    <div class="bank-number">1000002979911</div>
+                </div>
+
+                <div class="note-box">
+                    <strong><i class="fas fa-info-circle"></i> Important:</strong><br>
+                    Please send a screenshot of the payment transaction to our WhatsApp. Include your full name in the message.
+                </div>
+
+                <a href="https://wa.me/251967659950?text=Hello,%20I%20have%20completed%20the%20payment%20for%20Addis%20Old%20School.%20Here%20is%20the%20screenshot%20and%20my%20name:" 
+                target="_blank" class="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i>
+                    Send Payment Proof
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>Sound Solution Events © 2025. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const buyBtn = document.getElementById('buyTicketsButton');
+        const options = document.getElementById('ticketOptions');
+        const agreementBox = document.getElementById('agreementBox');
+        const paymentSection = document.getElementById('paymentSection');
+        
+        // Payment Section Elements
+        const multiDropdown = document.getElementById('multiDropdown');
+        const totalBox = document.getElementById('totalBox');
+        const finalPriceSpan = document.getElementById('finalPrice');
+        const bankDetailsWrapper = document.getElementById('bankDetailsWrapper');
+        
+        const checks = [
+            document.getElementById('check1'), 
+            document.getElementById('check2'),
+            document.getElementById('check3'),
+            document.getElementById('check4'),
+            document.getElementById('check5')
+        ];
+        
+        const TICKET_PRICE = 5000;
+        let hasAgreed = false;
+
+        // 1. Show ticket options
+        buyBtn.onclick = () => {
+            options.style.display = 'flex';
+            options.scrollIntoView({behavior: 'smooth', block: 'center'});
+        };
+
+        // 2. Start Booking (Flashcard Click)
+        function startBooking(type) {
+            if (checkSoldOut()) return;
+            if (hasAgreed) {
+                // If agreed, jump to form
+                 document.getElementById('customerFormBox').style.display = 'block';
+                 return;
+            }
+
+            // Show Agreements
+            checks.forEach(check => check.checked = false);
+            agreementBox.style.display = 'block';
+            setTimeout(() => {
+                agreementBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // 3. Agree Logic
+        function agreeAndProceed() {
+            const allChecked = checks.every(check => check.checked);
+            if (!allChecked) {
+                alert('Please agree to all terms and conditions to proceed.');
+                return;
+            }
+
+            hasAgreed = true;
+            agreementBox.style.display = 'none';
+
+            // Show Customer Form
+            const formBox = document.getElementById('customerFormBox');
+            formBox.style.display = 'block';
+            formBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 4. Submit Customer & Show Payment Section
+        async function submitCustomerInfo() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+
+            if (!name || !phone) {
+                alert('Please enter both your Full Name and Phone Number.');
+                return;
+            }
+
+            if (!/^\+?[0-9]{8,15}$/.test(phone)) {
+                alert('Please enter a valid phone number (e.g., +2519...)');
+                return;
+            }
+
+            const submitBtn = document.querySelector('#customerFormBox button');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'Processing...';
+            submitBtn.disabled = true;
+
+            try {
+                const res = await fetch('/customers/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, phone_number: phone })
+                });
+                const data = await res.json();
+                
+                // Allow proceeding even if user exists (data.success might be false)
+                if (!data.success) console.warn(data.message);
+
+                // Hide Form, Show Payment Section
+                document.getElementById('customerFormBox').style.display = 'none';
+                paymentSection.style.display = 'block';
+                
+                setTimeout(() => {
+                    paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+
+            } catch (err) {
+                console.error(err);
+                // Proceed anyway on error
+                document.getElementById('customerFormBox').style.display = 'none';
+                paymentSection.style.display = 'block';
+                paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } finally {
+                 submitBtn.innerText = originalText;
+                 submitBtn.disabled = false;
+            }
+        }
+
+        /* --- PAYMENT SECTION LOGIC --- */
+
+        // Button: Buy Single Ticket
+        function setPaymentSingle() {
+            // Hide multi dropdown if open
+            multiDropdown.style.display = 'none';
+            document.getElementById('ticketQty').value = "0"; // Reset select
+
+            // Calculate and Show
+            const total = TICKET_PRICE;
+            finalPriceSpan.innerText = total.toLocaleString();
+            totalBox.style.display = 'block';
+            
+            // Show Bank Details
+            bankDetailsWrapper.style.display = 'block';
+        }
+
+        // Button: Buy Multiple Tickets
+        function toggleMultiOptions() {
+            // Toggle dropdown
+            multiDropdown.style.display = 'block';
+            
+            // Hide total and bank details until they select a number
+            totalBox.style.display = 'none';
+            bankDetailsWrapper.style.display = 'none';
+        }
+
+        // Dropdown Change Event
+        function calculateTotal() {
+            const qty = parseInt(document.getElementById('ticketQty').value);
+            if (qty > 1) {
+                const total = qty * TICKET_PRICE;
+                finalPriceSpan.innerText = total.toLocaleString();
+                totalBox.style.display = 'block';
+                
+                // Show Bank Details
+                bankDetailsWrapper.style.display = 'block';
+            }
+        }
+
+        function checkSoldOut() {
+            if (promoSoldOut) {
+                alert('Sorry, Promo tickets are currently SOLD OUT.');
+                return true;
+            }
+            return false;
+        }
+    </script>
+
+    <script>
+        let promoSoldOut = false;
+        document.addEventListener('DOMContentLoaded', async () => {
+          try {
+            const res = await fetch('/reservations/availability');
+            const data = await res.json();
+            if (!data.success) return;
+        
+            if (data.promo_sold_out) {
+              promoSoldOut = true;
+              const promoCard = document.querySelector('.flashcard.promo');
+              const btn = promoCard.querySelector('button');
+              
+              btn.textContent = 'SOLD OUT';
+              btn.style.background = '#ccc';
+              btn.style.cursor = 'not-allowed';
+              btn.disabled = true;
+
+              const promoNote = promoCard.querySelector('.promo-highlight');
+              if (promoNote) {
+                promoNote.innerHTML = '<i class="fas fa-times-circle"></i> Sold Out';
+                promoNote.style.color = '#721c24';
+                promoNote.style.background = '#f8d7da';
+              }
+              promoCard.style.opacity = '0.7';
+              promoCard.style.filter = 'grayscale(100%)';
+            }
+          } catch (e) {
+            console.error('Promo availability check failed', e);
+          }
+        });
+    </script>
+</body>
+</html>

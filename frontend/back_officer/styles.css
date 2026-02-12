@@ -1,0 +1,324 @@
+/* styles.css - shared */
+
+/* Define Color Palette Variables */
+:root {
+    --light-gray: #D6D6D6;
+    --medium-gray: #A8A9AD;
+    --dark-gray: #7A7978;
+    --deep-red: #9C0006;
+    --medium-red: #BF2626;
+    --bright-red: #EB5252;
+    --white: #ffffff;
+    --text-color: #333333;
+    --primary-action: var(--bright-red);
+    --secondary-action: var(--medium-gray);
+    --hover-color: var(--medium-red);
+    --light-bg: #f6f8fb; /* Light background for body */
+    --panel-border: #e6e9ef;
+}
+
+/* Base & Typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--light-bg);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    color: var(--deep-red);
+    margin-bottom: 0.5rem;
+}
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+
+/* --- Top Bar & Navigation --- */
+.topbar {
+    background: var(--deep-red); /* Changed to deep red */
+    color: var(--white);
+    padding: 12px 5%; /* Added horizontal padding */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--white);
+}
+
+.nav a {
+    color: var(--light-gray);
+    margin-left: 10px;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+    transition: background 0.3s, color 0.3s;
+    font-size: 0.95rem;
+}
+
+.nav a.active, .nav a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+}
+
+/* --- Layout --- */
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 18px; /* Adjusted padding to be only horizontal */
+}
+
+/* --- Panels (Forms, Tables) --- */
+.panel {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Added subtle shadow */
+    margin-bottom: 20px;
+}
+
+/* Style for the form card in add_customer.html and toolbar in manage_reservations.html */
+.card, .toolbar {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+.toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 15px;
+}
+
+/* Form Styling (Add Customer, Payment Confirmation) */
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+input[type="text"], input[type="number"], select {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 8px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary-action);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(235, 82, 82, 0.2);
+}
+
+/* --- Buttons --- */
+button {
+    cursor: pointer;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: none;
+    font-weight: bold;
+    color: var(--white);
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+    background: var(--primary-action);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+/* Primary Button Hover/Active */
+button:hover {
+    background: var(--hover-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Special case for secondary buttons or buttons defined with 'onclick' */
+button[type="button"], button[onclick] {
+    background: var(--secondary-action);
+}
+button[type="button"]:hover, button[onclick]:hover {
+    background: var(--dark-gray);
+}
+button[type="submit"] {
+    background: var(--primary-action);
+}
+
+/* Panel Head for actions (Customers list) */
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.actions input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--medium-gray);
+    width: 250px;
+    transition: border-color 0.3s;
+}
+
+/* --- Tables --- */
+.table {
+    width: 100%;
+    border-collapse: separate; /* Use separate for rounded corners/spacing */
+    border-spacing: 0;
+    margin-top: 12px;
+}
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--light-gray);
+}
+.table thead th {
+    background: var(--light-gray);
+    color: var(--text-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+.table tbody tr:hover {
+    background: #fdf2f2; /* Very light red hover for rows */
+    cursor: pointer;
+}
+.table tr:last-child td {
+    border-bottom: none;
+}
+/* Status colors in Manage Reservations */
+.status-approved { color: var(--whatsapp-green); font-weight: bold; }
+.status-rejected { color: var(--error-color); font-weight: bold; }
+.status-pending { color: var(--dark-gray); font-weight: bold; }
+
+/* --- Pager (Pagination) --- */
+.pager {
+    margin-top: 15px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.pager button {
+    padding: 8px 12px;
+    border: 1px solid var(--medium-gray);
+    background: var(--white);
+    color: var(--text-color);
+    border-radius: 6px;
+    font-weight: normal;
+    transition: background 0.3s;
+    margin-top: 0; /* Override button margin */
+}
+.pager button.active {
+    background: var(--deep-red); /* Active page color */
+    color: var(--white);
+    border-color: var(--deep-red);
+}
+.pager button:hover:not(.active) {
+    background: var(--light-gray);
+}
+
+/* --- Alerts and Messages --- */
+#message, #actionMessage {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+.success { color: #0a8f3f; } /* Darker green */
+.error { color: #d12f2f; } /* Darker red */
+.muted { color: var(--medium-gray); font-size: 0.85rem; }
+
+
+/* --- Responsive Adjustments (Mobile & Tablet) --- */
+@media (max-width: 900px) {
+    .container {
+        padding: 0 10px;
+    }
+    /* Navigation Stack on small screens */
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 10px;
+    }
+    .nav {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .nav a {
+        margin: 4px 10px 4px 0;
+        padding: 6px 8px;
+        font-size: 0.85rem;
+    }
+    /* Customer list header layout */
+    .panel-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .actions {
+        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .actions input {
+        width: calc(100% - 100px);
+        flex-grow: 1;
+    }
+    .actions button {
+        flex-grow: 1;
+        width: auto;
+        min-width: 100px;
+    }
+    /* Table overflow on small screens */
+    #listWrap {
+        overflow-x: auto;
+    }
+    .table {
+        min-width: 600px; /* Ensures table columns don't compress too much */
+    }
+    /* Toolbar in Manage Reservations */
+    .toolbar {
+        flex-wrap: wrap;
+    }
+    .toolbar input {
+        flex-grow: 1;
+        width: auto;
+    }
+    .toolbar button {
+        flex-grow: 1;
+    }
+    /* Scanner wrap */
+    .scanner-wrap {
+        flex-direction: column;
+    }
+    #video {
+        width: 100%;
+        max-width: none;
+    }
+    .qr-card {
+        width: 100%;
+        max-width: 350px;
+    }
+}

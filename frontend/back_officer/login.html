@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Officer Login</title>
+    <style>
+        /* Define Color Palette Variables */
+        :root {
+            --light-gray: #D6D6D6;
+            --medium-gray: #A8A9AD;
+            --dark-gray: #7A7978;
+            --deep-red: #9C0006;
+            --medium-red: #BF2626;
+            --bright-red: #EB5252;
+            --white: #ffffff;
+            --text-color: #333333;
+            --primary-action: var(--bright-red);
+            --secondary-action: var(--medium-gray);
+            --hover-color: var(--medium-red);
+            --light-bg: #f6f8fb; /* Light background for body */
+            --panel-border: #e6e9ef;
+        }
+
+        /* Base & Typography */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: var(--deep-red);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            text-align: center; /* Center the title inside the card */
+        }
+        
+        /* --- Centering Styles --- */
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            padding: 20px; /* Add padding for mobile view */
+            box-sizing: border-box;
+        }
+
+        /* --- Card Styles --- */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px; /* Increased padding */
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Stronger shadow for focus */
+            width: 100%; /* Make it responsive */
+            max-width: 380px; /* Slightly wider max-width */
+        }
+
+        /* Form elements for login */
+        input[type="text"], input[type="password"] {
+            padding: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 15px; /* Spacing between inputs */
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px; /* Slightly rounded corners */
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            display: block; /* Ensure full width */
+        }
+
+        input:focus {
+            border-color: var(--primary-action);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(235, 82, 82, 0.3);
+        }
+
+        /* --- Button Styles --- */
+        #loginBtn {
+            cursor: pointer;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            color: var(--white);
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+            background: var(--deep-red); /* Using deep-red for primary action here */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            margin-top: 25px; /* Spacing above button */
+            width: 100%;
+        }
+
+        #loginBtn:hover {
+            background: var(--medium-red);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Message area */
+        #msg {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .muted { 
+            color: var(--dark-gray); 
+            font-size: 0.85rem; 
+        }
+
+        /* Responsive adjustments for very small screens */
+        @media (max-width: 480px) {
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body class="centered">
+
+    <div class="card">
+        <h2>Officer Login</h2>
+
+        <input id="username" type="text" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+
+        <button id="loginBtn">Login</button>
+
+        <div id="msg" class="muted"></div>
+    </div>
+
+<script src="login.js"></script>
+</body>
+</html>

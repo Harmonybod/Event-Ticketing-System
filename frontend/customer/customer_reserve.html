@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Reserve Ticket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- START OF RESPONSIVE CSS STYLES --- */
+
+        /* Define Color Palette Variables */
+        :root {
+            --light-gray: #F0F2F5;
+            --medium-gray: #A8A9AD;
+            --dark-gray: #7A7978;
+            --deep-red: #9C0006;
+            --medium-red: #BF2626;
+            --bright-red: #EB5252;
+            --white: #ffffff;
+            --text-color: #333333;
+            --whatsapp-green: #25D366;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* General Reset and Typography */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Removes blue highlight on mobile tap */
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 40px;
+            font-size: 16px; /* Base font size */
+        }
+
+        h3 {
+            font-weight: 700;
+            color: var(--deep-red);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* --- NAVIGATION BAR --- */
+        .navbar {
+            background-color: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .logo {
+            color: var(--deep-red);
+            font-size: 1.4rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 10px; /* Larger hit area */
+        }
+
+        .nav-links a:hover {
+            color: var(--bright-red);
+        }
+
+        /* --- CARD CONTAINER --- */
+        .card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            width: 90%; /* Responsive width */
+            max-width: 550px; /* Max width for desktop */
+            margin: 30px auto;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s;
+        }
+
+        .note {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            margin-bottom: 25px;
+            background: #fff5f5;
+            padding: 10px 15px;
+            border-left: 4px solid var(--bright-red);
+            border-radius: 4px;
+            line-height: 1.4;
+        }
+
+        /* --- FORM ELEMENTS --- */
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            padding: 14px;
+            width: 100%;
+            margin-top: 8px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem; /* Keeps font readable */
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+            appearance: none; /* Uniform look across browsers */
+        }
+        
+        /* Fix for iOS zooming on focus */
+        @media screen and (max-width: 768px) {
+            input, select {
+                font-size: 16px; 
+            }
+        }
+
+        input:focus, select:focus {
+            border-color: var(--bright-red);
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(235, 82, 82, 0.1);
+        }
+
+        /* --- BUTTONS --- */
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--white);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px; /* Accessible touch target height */
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, var(--bright-red), var(--deep-red));
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        #checkBtn {
+            background-color: #6c757d;
+        }
+        #checkBtn:hover {
+            background-color: #5a6268;
+        }
+
+        /* --- AGREEMENT LIST --- */
+        .agreement-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .agreement-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            cursor: pointer; /* Indicates it's clickable */
+        }
+        
+        .agreement-item:hover {
+            background-color: #f8f9fa;
+            border-color: #ddd;
+        }
+
+        .agreement-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            margin-right: 15px;
+            flex-shrink: 0; /* Prevents checkbox from squishing */
+            cursor: pointer;
+            accent-color: var(--deep-red);
+        }
+
+        .agreement-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        #agreeBtn {
+            width: 100%;
+            margin-top: 20px;
+            background-color: var(--text-color);
+        }
+
+        /* --- PAYMENT SECTION --- */
+        .payment-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px 10px;
+            border-radius: 12px;
+        }
+
+        .qr-frame {
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            max-width: 100%;
+        }
+        .qr-frame img {
+            display: block;
+            border-radius: 8px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .bank-details {
+            background-color: #f8f9fa;
+            border: 1px dashed var(--medium-gray);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            word-wrap: break-word; /* Prevents long numbers breaking layout */
+        }
+        
+        .bank-label {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .bank-number {
+            font-size: clamp(1.2rem, 5vw, 1.6rem); /* Responsive font size */
+            font-weight: 800;
+            color: var(--deep-red);
+            font-family: 'Courier New', monospace;
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--whatsapp-green);
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+        .whatsapp-btn:hover {
+            background-color: #1ebc57;
+            transform: translateY(-2px);
+        }
+
+        /* --- MESSAGES --- */
+        #result { margin-top: 20px; }
+        .success {
+            color: #155724;
+            background-color: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #28a745;
+            font-size: 0.95rem;
+        }
+        .error {
+            color: #721c24;
+            background-color: #f8d7da;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #dc3545;
+            font-size: 0.95rem;
+        }
+        .muted { color: var(--medium-gray); font-style: italic; text-align: center;}
+
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        
+        /* Tablet & Mobile Breakpoints */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column; /* Stack logo and links */
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .nav-links {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-links a {
+                margin: 0;
+                padding: 8px 12px;
+                background-color: #f5f5f5;
+                border-radius: 20px;
+                font-size: 0.9rem;
+            }
+
+            .card {
+                padding: 25px 20px;
+                margin-top: 15px;
+            }
+        }
+
+        /* Small Mobile Breakpoint */
+        @media (max-width: 480px) {
+            h3 { font-size: 1.3rem; text-align: center; }
+            
+            .nav-links {
+                flex-direction: column; /* Stack links vertically on very small screens */
+                gap: 5px;
+            }
+            .nav-links a {
+                display: block;
+                text-align: center;
+                width: 100%;
+            }
+
+            /* FORCE OVERRIDE INLINE STYLES FOR BUTTON CONTAINER */
+            /* Since the HTML has inline styles for display:flex, we use !important to make it responsive */
+            #reserveForm > div {
+                flex-direction: column !important;
+                gap: 12px;
+            }
+
+            /* FORCE OVERRIDE INLINE STYLES FOR BUTTONS */
+            #reserveForm > div > button {
+                width: 100% !important;
+                margin-right: 0 !important;
+                flex: none !important; /* Resets the inline flex: 2 and flex: 1 */
+            }
+
+            .agreement-item {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo"><i class="fas fa-ticket-alt"></i> Reserve Ticket</div>
+    <div class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="contactUs.html">Contact Us</a>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="card">
+        <h3>Reserve up to 5 tickets</h3>
+        <p class="note"><i class="fas fa-info-circle"></i> Promo tickets are limited. Valid until Dec 27, 2025.</p>
+
+        <form id="reserveForm">
+            <label for="name">Full Name</label>
+            <input id="name" type="text" placeholder="e.g. Abebe Kebede" required>
+
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="tel" required pattern="^\+[0-9]{6,18}$"
+                   placeholder="+251912345678">
+
+            <label for="ticket_type">Ticket Type</label>
+            <select id="ticket_type">
+                <option value="promo">Promo (Discounted) - 5000 ETB</option>
+                <option value="regular">Regular - 7000 ETB</option>
+            </select>
+
+            <label for="count">Quantity</label>
+            <select id="count">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+
+            <div style="margin-top:30px; display: flex; justify-content: space-between;">
+                <button type="submit" style="flex: 2;">Reserve Now</button>
+                <button type="button" id="checkBtn" style="flex: 1;">Check Status</button>
+            </div>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <div class="card" id="paymentFlow" style="display:none; border-top: 4px solid var(--deep-red);">
+        
+        <h3><i class="fas fa-file-contract"></i> Finalize Reservation</h3>
+        <p class="note" style="background: white; border:none; padding:0; margin-bottom:15px;">Please agree to the terms to view payment details.</p>
+
+        <div id="agreementBox">
+            <div class="agreement-list">
+                <label class="agreement-item">
+                    <input type="checkbox" id="agree1">
+                    <span class="agreement-text">Promo tickets valid until <b>Dec 27, 2025</b>.</span>
+                </label>
+                <label class="agreement-item">
+                    <input type="checkbox" id="agree2">
+                    <span class="agreement-text">Max <b>5 tickets</b> per phone number.</span>
+                </label>
+                <label class="agreement-item">
+                    <input type="checkbox" id="agree3">
+                    <span class="agreement-text">Receipt/Screenshot must be sent to <b>WhatsApp</b>.</span>
+                </label>
+                <label class="agreement-item">
+                    <input type="checkbox" id="agree4">
+                    <span class="agreement-text">Entrance QR code will be sent within <b>24 hours</b>.</span>
+                </label>
+                <label class="agreement-item">
+                    <input type="checkbox" id="agree5">
+                    <span class="agreement-text">Buyer is responsible for distributing tickets to guests.</span>
+                </label>
+            </div>
+
+            <button id="agreeBtn">
+                Agree & Continue <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div id="paymentSection" style="display:none; margin-top:20px;">
+            <div class="payment-container">
+                
+                <div class="qr-frame">
+                    <img src="qrCode.jpg" alt="Scan to Pay" onerror="this.src='https://via.placeholder.com/200?text=QR+Code+Here'">
+                </div>
+
+                <div class="bank-details">
+                    <div class="bank-label">Commercial Bank of Ethiopia (CBE)</div>
+                    <div class="bank-number">1000002979911</div>
+                </div>
+
+                <a class="whatsapp-btn"
+                   target="_blank"
+                   href="https://wa.me/251967659950?text=Hello,%20I%20have%20completed%20the%20payment%20for%20my%20reservation.%20Here%20is%20the%20receipt.">
+                    <i class="fab fa-whatsapp"></i>
+                    Send Payment Proof
+                </a>
+                
+                <p style="margin-top: 15px; font-size: 0.85rem; color: #777;">
+                    Clicking the button above will open WhatsApp.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    /* =========================
+       RESERVE TICKET
+    ========================= */
+    document.getElementById('reserveForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+    
+        const nameEl = document.getElementById('name');
+        const phoneEl = document.getElementById('phone');
+        const countEl = document.getElementById('count');
+        const typeEl = document.getElementById('ticket_type');
+        const resultEl = document.getElementById('result');
+    
+        const payload = {
+            name: nameEl.value.trim(),
+            phone_number: phoneEl.value.trim(),
+            count: countEl.value,
+            ticket_type: typeEl.value
+        };
+    
+        resultEl.innerHTML = '<p class="muted"><i class="fas fa-spinner fa-spin"></i> Processing reservation...</p>';
+    
+        try {
+            const res = await fetch('/reservations/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+    
+            const data = await res.json();
+    
+            // ❌ FAILED
+            if (!res.ok || !data.success) {
+                resultEl.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-circle"></i> ${data.message || 'Reservation failed'}
+                    </div>
+                `;
+                return;
+            }
+    
+            // ✅ SUCCESS
+            let codesHtml = '';
+            if (Array.isArray(data.codes) && data.codes.length > 0) {
+                codesHtml = `
+                    <div style="margin-top:10px; padding:10px; background:rgba(255,255,255,0.5); border-radius:6px;">
+                        <b>Ticket Codes:</b><br>
+                        ${data.codes.join('<br>')}
+                    </div>
+                `;
+            }
+    
+            resultEl.innerHTML = `
+                <div class="success">
+                    <h4><i class="fas fa-check-circle"></i> Reservation Successful!</h4>
+                    <p>${data.message}</p>
+                    <p><b>ID:</b> ${data.reservation_id || 'N/A'}</p>
+                    ${codesHtml}
+                </div>
+            `;
+    
+        } catch (err) {
+            console.error(err);
+            resultEl.innerHTML = `
+                <div class="error">
+                     <i class="fas fa-wifi"></i> Network error. Please try again.
+                </div>
+            `;
+        }
+    });
+    
+    
+    /* =========================
+       CHECK EXISTING RESERVATIONS
+    ========================= */
+    document.getElementById('checkBtn').addEventListener('click', async () => {
+        const phone = document.getElementById('phone').value.trim();
+        const resultEl = document.getElementById('result');
+    
+        if (!phone) {
+            resultEl.innerHTML = '<div class="error">Please enter a phone number first.</div>';
+            return;
+        }
+    
+        resultEl.innerHTML = '<p class="muted"><i class="fas fa-search"></i> Checking records...</p>';
+    
+        try {
+            const res = await fetch('/reservations/customer?phone=' + encodeURIComponent(phone));
+            const data = await res.json();
+    
+            if (!res.ok || !data.success || !Array.isArray(data.reservations) || data.reservations.length === 0) {
+                resultEl.innerHTML = `
+                    <div class="note" style="text-align:center; border:none; background:#f0f0f0;">
+                        No reservations found for this number.
+                    </div>
+                `;
+                return;
+            }
+    
+            if (data.success && data.reservations.length > 0) {
+                // Show summary
+                resultEl.innerHTML = data.reservations.map(r => `
+                    <div style="padding:10px; border-bottom:1px solid #eee; margin-bottom:5px;">
+                        <i class="far fa-calendar-alt"></i> ${new Date(r.reservation_date).toLocaleDateString()} —
+                        <b>${r.total_tickets}</b> ticket(s)
+                        (${r.ticket_type.toUpperCase()})
+                        <br>
+                        <small style="color:${r.status === 'approved' ? 'green' : 'orange'}">
+                            Status: ${r.status.toUpperCase()}
+                        </small>
+                    </div>
+                `).join('');
+    
+                // ✅ REVEAL PAYMENT FLOW
+                const paymentFlow = document.getElementById('paymentFlow');
+                paymentFlow.style.display = 'block';
+                
+                // Smooth scroll to the payment section
+                setTimeout(() => {
+                    paymentFlow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+    
+        } catch (err) {
+            console.error(err);
+            resultEl.innerHTML = `
+                <div class="error">
+                    <i class="fas fa-wifi"></i> Network error while checking reservations.
+                </div>
+            `;
+        }
+    });
+
+    /* =========================
+       AGREEMENT CHECK LOGIC
+    ========================= */
+    document.getElementById('agreeBtn').addEventListener('click', () => {
+        const a1 = document.getElementById('agree1').checked;
+        const a2 = document.getElementById('agree2').checked;
+        const a3 = document.getElementById('agree3').checked;
+        const a4 = document.getElementById('agree4').checked;
+        const a5 = document.getElementById('agree5').checked;
+
+        if (!a1 || !a2 || !a3 || !a4 || !a5) {
+            alert('Please read and agree to all conditions to proceed.');
+            return;
+        }
+
+        // Hide agreement, show payment
+        document.getElementById('agreementBox').style.display = 'none';
+        
+        // Fade in payment section
+        const paySection = document.getElementById('paymentSection');
+        paySection.style.display = 'block';
+        paySection.style.opacity = 0;
+        
+        let op = 0.1;  // initial opacity
+        let timer = setInterval(function () {
+            if (op >= 1){
+                clearInterval(timer);
+            }
+            paySection.style.opacity = op;
+            op = op + 0.1;
+        }, 30);
+    });
+
+</script>
+    
+</body>
+</html>

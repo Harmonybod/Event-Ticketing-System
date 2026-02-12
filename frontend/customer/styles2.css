@@ -1,0 +1,346 @@
+        /* Define Color Palette Variables */
+        :root {
+            --light-gray: #D6D6D6;
+            --medium-gray: #A8A9AD;
+            --dark-gray: #7A7978;
+            --deep-red: #9C0006;
+            --medium-red: #BF2626;
+            --bright-red: #EB5252;
+            --white: #ffffff;
+            --text-color: #333333;
+            --whatsapp-green: #25D366; /* Added specific WhatsApp green */
+        }
+
+        /* General Reset and Typography */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: var(--deep-red);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--bright-red);
+        }
+
+        /* Hero Section with Background Image */
+        .hero {
+            /* Using the filename provided. Ensure the image is in the same folder. */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('3d-music-related-scene.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 8rem 5%;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero h1 {
+            color: var(--white);
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            color: var(--light-gray);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* Ticket Section */
+        .tickets-section {
+            padding: 4rem 5%;
+            background-color: var(--white);
+            text-align: center;
+        }
+
+        .section-header {
+            color: var(--deep-red);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .ticket-note {
+            color: var(--medium-gray);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        /* Flashcards/Pricing Tables */
+        .pricing-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .flashcard {
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .flashcard h3 {
+            color: var(--dark-gray);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            color: var(--deep-red);
+            font-weight: bold;
+            margin: 1.5rem 0;
+        }
+
+        .flashcard-details {
+            color: var(--dark-gray);
+            flex-grow: 1;
+        }
+
+        .promo-highlight {
+            color: var(--bright-red);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .flashcard.promo {
+            border-top: 4px solid var(--bright-red);
+            background-color: #f9f9f9;
+        }
+
+        .card-btn {
+            margin-top: 2rem;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .btn-promo {
+            background-color: var(--bright-red);
+            color: white;
+        }
+        .btn-promo:hover { background-color: var(--medium-red); }
+
+        .btn-regular {
+            background-color: var(--medium-gray);
+            color: white;
+        }
+        .btn-regular:hover { background-color: var(--dark-gray); }
+
+        /* Payment Section */
+        .payment-section {
+            padding: 5rem 5%;
+            background-color: var(--light-gray);
+            text-align: center;
+            color: var(--dark-gray);
+            scroll-margin-top: 70px;
+        }
+
+        .qr-container img {
+            max-width: 250px;
+            height: auto;
+            border: 3px solid var(--medium-gray);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .bank-details {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+            color: var(--deep-red);
+        }
+
+        .payment-instruction {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--bright-red);
+        }
+
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--whatsapp-green); /* Green as requested */
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+            background-color: #1ebe57;
+        }
+
+        .whatsapp-btn i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+        }
+
+        /* Contact Us Section - Distinct Design */
+        .contact-section {
+            padding: 5rem 5%;
+            background-color: var(--dark-gray); /* Dark background for contrast */
+            color: white;
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .contact-intro {
+            max-width: 700px;
+            margin: 0 auto 3rem auto;
+            font-size: 1.1rem;
+            color: var(--light-gray);
+        }
+
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            width: 300px;
+            transition: background-color 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .contact-card:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .contact-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-link {
+            color: var(--light-gray);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .contact-link:hover {
+            color: var(--bright-red);
+        }
+
+        .icon-whatsapp { color: var(--whatsapp-green); }
+        .icon-email { color: var(--bright-red); }
+
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: var(--light-gray);
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .nav-links {
+                margin-top: 1rem;
+            }
+            .nav-links a {
+                margin: 0 10px;
+                font-size: 0.9rem;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .flashcard, .contact-card {
+                max-width: 100%;
+            }
+            .contact-methods {
+                flex-direction: column;
+                align-items: center;
+            }
+        }

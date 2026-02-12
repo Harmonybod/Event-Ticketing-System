@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Customer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Add Customers</h1>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="customers.html">Customers</a>
+        </nav>
+      </header>
+
+    <div class="container">
+        <h1>Add a Customer</h1>
+
+        <form id="addCustomerForm">
+            <label>Phone Number</label>
+            <input type="text" id="phone_number" placeholder="e.g., 0912345678" required>
+
+            <label>Name</label>
+            <input type="text" id="name" placeholder="Customer name" required>
+
+            <button type="submit">Add Customer</button>
+            <button type="button" id="resetBtn">Reset</button>
+        </form>
+
+        <p id="message"></p>
+    </div>
+
+    <script src="add_customer.js"></script><script>
+        fetch('/auth/check')
+          .then(r => r.json())
+          .then(d => {
+            if (!d.loggedIn) {
+              window.location.href = 'login.html';
+            }
+          });
+    </script>
+        
+
+</body>
+</html>

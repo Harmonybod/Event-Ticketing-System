@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Customers</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Officer Portal</h1>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="customers.html" class="active">Customers</a>
+      <a href="manage_reservations.html">Manage Reservations</a>
+      <a href="payment_confirmation.html">Payment Confirmation</a>
+      <a href="invitation.html">Invitation</a>
+      <a href="scanner.html">QR Scanner</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Customer List</h2>
+        <div class="actions">
+          <input id="searchInput" placeholder="Search by name or phone..." />
+          <button id="searchBtn">Search</button>
+          <button id="addBtn" onclick="location.href='add_customer.html'">Add Customer</button>
+        </div>
+      </div>
+
+      <div id="listWrap">
+        <table id="customersTable" class="table">
+          <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Action</th></tr></thead>
+          <tbody id="customersTbody"></tbody>
+        </table>
+
+        <div id="pager" class="pager" aria-label="Pagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="customers.js"></script>
+  <script>
+    fetch('/auth/check')
+      .then(r => r.json())
+      .then(d => {
+        if (!d.loggedIn) {
+          window.location.href = 'login.html';
+        }
+      });
+  </script>
+    
+</body>
+</html>

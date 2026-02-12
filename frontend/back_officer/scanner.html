@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>QR Scanner</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .scanner-wrap{display:flex;gap:16px}
+    #video{width:480px;border-radius:8px;background:#000}
+    #popup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
+      display:none;padding:28px;border-radius:14px;z-index:9999;text-align:center}
+    .ok{background:#e6fff0;border:3px solid #0a8f3f;color:#0a8f3f}
+    .bad{background:#fff0f0;border:3px solid #d12f2f;color:#d12f2f}
+    .used{background:#fffaf0;border:3px solid #d1a12f;color:#d1a12f}
+    .big{font-size:52px;margin-bottom:8px}
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <h1>Officer Portal</h1>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="customers.html">Customers</a>
+    <a href="scanner.html" class="active">QR Scanner</a>
+  </nav>
+</header>
+
+<main class="container">
+  <h2>QR Scanner</h2>
+
+  <div class="scanner-wrap">
+    <div>
+      <video id="video" autoplay playsinline></video>
+      <div style="margin-top:8px">
+        <button id="startBtn">Start Camera</button>
+        <button id="stopBtn">Stop Camera</button>
+      </div>
+    </div>
+
+    <div style="flex:1">
+      <h3>Last decoded</h3>
+      <pre id="lastDecoded">No scans yet</pre>
+
+      <h3>Customer Info</h3>
+      <p><b>Name:</b> <span id="custName">—</span></p>
+      <p><b>Phone:</b> <span id="custPhone">—</span></p>
+
+      <h4>Manual verify</h4>
+      <input id="manual" placeholder="Paste hash here"
+        style="width:100%;padding:8px;margin-top:6px" />
+      <button id="manualBtn">Verify</button>
+    </div>
+  </div>
+</main>
+
+<div id="popup"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script src="scanner.js"></script>
+<script>
+  fetch('/auth/check')
+    .then(r => r.json())
+    .then(d => {
+      if (!d.loggedIn) {
+        window.location.href = 'login.html';
+      }
+    });
+</script>
+  
+</body>
+</html>

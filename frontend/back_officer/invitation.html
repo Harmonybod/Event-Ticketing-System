@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Invitation</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .invitation-box {
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--light-gray);
+      border-radius: 8px;
+      border: 1px solid var(--panel-border);
+    }
+
+    #invitationLink {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      font-family: monospace;
+      background: var(--white);
+    }
+
+    #copyBtn {
+      width: 100%;
+      background: var(--primary-action);
+    }
+
+    #copyBtn.copied {
+      background: #0a8f3f;
+      border-color: #0a8f3f;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <h1>Officer Portal</h1>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="customers.html">Customers</a>
+      <a href="manage_reservations.html">Manage Reservations</a>
+      <a href="payment_confirmation.html">Payment Confirmation</a>
+      <a href="invitation.html" class="active">Invitation</a>
+      <a href="scanner.html">QR Scanner</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h2>Invitation Link</h2>
+
+      <p>
+        Copy the invitation link below and share it with customers via WhatsApp,
+        Telegram, or any messaging app.
+      </p>
+
+      <div class="invitation-box">
+        <label for="invitationLink">Link to Copy</label>
+
+        <input
+          id="invitationLink"
+          type="text"
+          value="https://www.addisoldschool.com/"
+          readonly
+        />
+
+        <button id="copyBtn" onclick="copyLink()">
+          Copy to Clipboard
+        </button>
+      </div>
+
+      <p id="copyMessage" style="margin-top:15px;text-align:center;font-weight:bold;"></p>
+    </section>
+  </main>
+
+  <script>
+    const linkInput = document.getElementById('invitationLink');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyMsg = document.getElementById('copyMessage');
+
+    fetch('/auth/check')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.loggedIn) {
+          window.location.href = 'login.html';
+        }
+      });
+
+    function copyLink() {
+      linkInput.select();
+      linkInput.setSelectionRange(0, 99999);
+
+      try {
+        document.execCommand('copy');
+
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
+        copyMsg.textContent = 'Link copied successfully';
+
+        setTimeout(() => {
+          copyBtn.textContent = 'Copy to Clipboard';
+          copyBtn.classList.remove('copied');
+          copyMsg.textContent = '';
+        }, 2000);
+
+      } catch (e) {
+        copyMsg.textContent = 'Failed to copy. Please copy manually.';
+      }
+    }
+
+    window.copyLink = copyLink;
+  </script>
+</body>
+</html>

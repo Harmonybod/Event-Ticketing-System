@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Payment Confirmation</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .search-box {
+      background: #fff;
+      border: 1px solid #e6e9ef;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      width: 240px;
+      padding: 8px;
+      margin-right: 10px;
+    }
+
+    .result-box {
+      padding: 12px;
+      background: #eef4ff;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .success { color: green; font-weight: bold; }
+    .error { color: red; font-weight: bold; }
+
+    #confirmForm input {
+      width: 250px;
+      padding: 8px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* QR Code Cards */
+    .qr-card {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      margin-bottom: 15px;
+      width: 220px;
+      display: inline-block;
+      vertical-align: top;
+      text-align: center;
+    }
+
+    .qr-card img {
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    #generateQRBtn, #resetBtn {
+      margin-top: 15px;
+      padding: 10px 16px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <h1>Officer Portal</h1>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="customers.html">Customers</a>
+      <a href="manage_reservations.html">Manage Reservations</a>
+      <a href="payment_confirmation.html" class="active">Payment Confirmation</a>
+      <a href="invitation.html">Invitation</a>
+      <a href="scanner.html">QR Scanner</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Confirm Customer Payment</h2>
+
+    <!-- SEARCH SECTION -->
+    <div class="search-box">
+      <label><b>Search Customer (Phone or Name)</b></label><br>
+      <input type="text" id="searchQuery" placeholder="Enter phone or name...">
+      <button type="button" onclick="searchCustomer()">Search</button>
+
+      <div id="searchResult" class="result-box"></div>
+    </div>
+
+    <!-- CONFIRMATION FORM -->
+    <form id="confirmForm">
+      <label>Confirmation ID (from Payment Screenshot)</label>
+      <input type="text" id="confirmation_id" required>
+
+      <label>Amount Paid</label>
+      <input type="number" id="amount_paid" min="0" step="0.01" required>
+
+      <label>Ticket Type</label>
+      <select id="ticket_type" required>
+        <option value="">-- Select Ticket Type --</option>
+        <option value="regular">Regular</option>
+        <option value="promo">Promo</option>
+      </select>
+
+
+      <label>Phone Number</label>
+      <input type="text" id="confirm_phone" required>
+
+      <label>Name</label>
+      <input type="text" id="confirm_name" required>
+
+      <button type="button" id="confirmSaveBtn" onclick="saveConfirmation()" disabled>
+        Save Confirmation
+      </button>
+
+      <div style="margin-top:16px;">
+        <h3>Create tickets</h3>
+
+        <button type="button" id="createSingleBtn" onclick="createSingle()" disabled>
+          Create Single Ticket
+        </button>
+
+        <label style="margin-left:12px">Multiple:</label>
+        <input type="number" id="multiCount" min="2" style="width:80px;padding:6px;margin-left:6px">
+
+        <button type="button" id="createMultiBtn" onclick="createMultiple()" disabled>
+          Create Multiple
+        </button>
+      </div>
+
+      <p id="actionMessage" style="margin-top:12px;color:green"></p>
+    </form>
+
+    <button id="generateQRBtn" style="display:none;" onclick="generateQrCodes()">
+      Generate QR Codes
+    </button>
+
+    <div id="qrDisplayArea"></div>
+
+    <button id="resetBtn" style="display:none;" onclick="resetEverything()">Reset</button>
+
+    <p id="confirmMessage"></p>
+  </main>
+
+<script>
+const EVENT_ID = 1;
+
+/////////////////////////////////////////////////
+// SEARCH CUSTOMER
+/////////////////////////////////////////////////
+async function searchCustomer() {
+    const query = document.getElementById("searchQuery").value.trim();
+    const resultBox = document.getElementById("searchResult");
+    const confirmBtn = document.getElementById("confirmSaveBtn");
+
+    resultBox.style.display = "none";
+    confirmBtn.disabled = true;
+
+    if (!query) {
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "<p class='error'>Please type phone or name.</p>";
+        return;
+    }
+
+    const API_BASE = location.origin;
+    const res = await fetch(
+      API_BASE + "/confirmation/search?query=" + encodeURIComponent(query)
+    );
+
+    const data = await res.json();
+
+    if (!data.success || data.customers.length === 0) {
+        resultBox.style.display = "block";
+        resultBox.innerHTML = `
+            <p>No customer found.</p>
+            <button id="addFromSearchBtn">Add Customer</button>
+        `;
+        document.getElementById("addFromSearchBtn").onclick = addCustomerFromSearch;
+        return;
+    }
+
+    const c = data.customers[0];
+    document.getElementById("confirm_phone").value = c.phone_number;
+    document.getElementById("confirm_name").value = c.name;
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `<p class="success">Customer found.</p>`;
+    confirmBtn.disabled = false;
+}
+
+/////////////////////////////////////////////////
+// ADD NEW CUSTOMER
+/////////////////////////////////////////////////
+function addCustomerFromSearch() {
+    const query = document.getElementById("searchQuery").value.trim();
+    const resultBox = document.getElementById("searchResult");
+
+    document.getElementById("confirm_phone").value = query;
+    document.getElementById("confirm_name").value = "";
+
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+        <p class="success">Phone filled. Enter name and save.</p>
+        <button id="saveCustomerNowBtn">Save Customer</button>
+    `;
+
+    document.getElementById("saveCustomerNowBtn").onclick = submitNewCustomer;
+}
+
+/////////////////////////////////////////////////
+// SAVE NEW CUSTOMER
+/////////////////////////////////////////////////
+async function submitNewCustomer() {
+    const phone = document.getElementById("confirm_phone").value.trim();
+    const name = document.getElementById("confirm_name").value.trim();
+    const resultBox = document.getElementById("searchResult");
+
+    if (!phone || !name) {
+        resultBox.innerHTML = "<p class='error'>Missing data.</p>";
+        return;
+    }
+
+    const res = await fetch("/confirmation/add_customer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone_number: phone, name })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        resultBox.innerHTML = `<p class='success'>${data.message}. Now save confirmation.</p>`;
+        document.getElementById("confirmSaveBtn").disabled = false;
+    } else {
+        resultBox.innerHTML = `<p class='error'>${data.message}</p>`;
+    }
+}
+
+/////////////////////////////////////////////////
+// SAVE CONFIRMATION
+/////////////////////////////////////////////////
+async function saveConfirmation() {
+    const confirmation_id = document.getElementById("confirmation_id").value.trim();
+    const phone = document.getElementById("confirm_phone").value.trim();
+    const resultBox = document.getElementById("searchResult");
+
+    if (!confirmation_id || !phone) {
+        resultBox.innerHTML = "<p class='error'>Missing fields</p>";
+        return;
+    }
+    const amount = document.getElementById("amount_paid").value;
+    const ticket_type = document.getElementById("ticket_type").value;
+
+    if (!amount || !ticket_type) {
+        resultBox.innerHTML = "<p class='error'>Amount and ticket type are required</p>";
+        return;
+    }
+    const res = await fetch("/confirmation/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmation_id, phone_number: phone, event_id: EVENT_ID, amount, ticket_type })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        resultBox.innerHTML = `<p class='error'>${data.message}</p>`;
+        return;
+    }
+
+    resultBox.innerHTML = `<p class='success'>Confirmation saved. Now create tickets.</p>`;
+
+    document.getElementById("createSingleBtn").disabled = false;
+    document.getElementById("createMultiBtn").disabled = false;
+}
+
+/////////////////////////////////////////////////
+// TICKET CREATION
+/////////////////////////////////////////////////
+async function createSingle() { await createTickets(1); }
+
+async function createMultiple() {
+    const count = parseInt(document.getElementById("multiCount").value);
+    if (!count || count < 2) {
+        alert("Count must be >= 2");
+        return;
+    }
+    await createTickets(count);
+}
+
+async function createTickets(count) {
+    const phone = document.getElementById("confirm_phone").value.trim();
+    const amount = document.getElementById("amount_paid").value;
+    const ticket_type = document.getElementById("ticket_type").value;
+
+
+    const res = await fetch("/confirmation/create_tickets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        
+        body: JSON.stringify({
+            phone_number: phone,
+            event_id: EVENT_ID,
+            count,
+            amount,
+            ticket_type
+        })
+
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        document.getElementById("actionMessage").innerText = data.message;
+        return;
+    }
+
+    document.getElementById("actionMessage").innerText = data.message;
+
+    window.generatedHashkeys = data.tickets.map(t => t.hashkey);
+
+    document.getElementById("generateQRBtn").style.display = "block";
+}
+
+/////////////////////////////////////////////////
+// GENERATE QR CODES
+/////////////////////////////////////////////////
+async function generateQrCodes() {
+    if (!window.generatedHashkeys || window.generatedHashkeys.length === 0) return;
+
+    const res = await fetch("/confirmation/generate_qr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hashkeys: window.generatedHashkeys })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+        alert("QR generation failed");
+        return;
+    }
+
+    const area = document.getElementById("qrDisplayArea");
+    area.innerHTML = "<h3>Generated QR Codes</h3>";
+
+    data.qrcodes.forEach(qr => {
+        const imgUrl = `/qr/${qr.filename}`;
+
+        area.innerHTML += `
+            <div class="qr-card">
+                <p><b>${qr.filename}</b></p>
+                <img src="${imgUrl}" width="180">
+                <button onclick="sendToWhatsApp('${imgUrl}')">Send via WhatsApp</button>
+                <button onclick="downloadQR('${imgUrl}', '${qr.filename}')">Download</button>
+            </div>
+        `;
+    });
+
+    document.getElementById("resetBtn").style.display = "block";
+}
+
+/////////////////////////////////////////////////
+// SEND VIA WHATSAPP
+/////////////////////////////////////////////////
+async function sendToWhatsApp(imgUrl) {
+    const phone = document.getElementById("confirm_phone").value.trim();
+
+    if (!phone) {
+        alert("Phone number missing.");
+        return;
+    }
+
+    try {
+        const res = await fetch("/confirmation/send_whatsapp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                phone_number: phone,
+                image_url: location.origin + imgUrl
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            alert("QR Code sent via WhatsApp!");
+        } else {
+            alert("Failed: " + data.message);
+        }
+
+    } catch (err) {
+        alert("WhatsApp error: " + err.message);
+    }
+}
+
+/////////////////////////////////////////////////
+// DOWNLOAD QR
+/////////////////////////////////////////////////
+function downloadQR(url, filename) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+}
+
+/////////////////////////////////////////////////
+// RESET EVERYTHING
+/////////////////////////////////////////////////
+function resetEverything() {
+    location.reload();
+}
+</script>
+<script>
+  fetch('/auth/check')
+    .then(r => r.json())
+    .then(d => {
+      if (!d.loggedIn) {
+        window.location.href = 'login.html';
+      }
+    });
+</script>
+  
+
+</body>
+</html>

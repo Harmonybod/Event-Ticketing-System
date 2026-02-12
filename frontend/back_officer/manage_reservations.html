@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Manage Reservations</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Small inline panel for codes / qr actions */
+    .panel-modal {
+      position: fixed;
+      right: 20px;
+      top: 80px;
+      width: 420px;
+      max-height: 70vh;
+      overflow:auto;
+      background: #fff;
+      border: 1px solid #e6e9ef;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      z-index: 1000;
+    }
+    .qr-thumb { display:inline-block; width:120px; margin:6px; text-align:center; vertical-align:top }
+    .qr-thumb img { width:100px; height:100px; object-fit:cover; border-radius:6px; border:1px solid #ddd }
+    .panel-actions { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap }
+    .btn-small { padding:6px 8px; font-size:13px; margin-right:6px; border-radius:6px; cursor:pointer }
+    .muted { color:#666; font-size:13px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1>Officer Portal</h1>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="customers.html">Customers</a>
+      <a href="manage_reservations.html" class="active">Manage Reservations</a>
+      <a href="payment_confirmation.html">Payment Confirmation</a>
+      <a href="invitation.html">Invitation</a>
+      <a href="scanner.html">QR Scanner</a>
+    </nav>
+  </header>
+  <main class="container">
+    <div class="card">
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search phone or name...">
+        <button id="searchBtn">Search</button>
+      </div>
+
+      <table id="tbl">
+        <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Tickets</th><th>Type</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="pager" class="pager"></div>
+    </div>
+  </main>
+
+  <!-- Panel will be inserted dynamically -->
+  <div id="panelRoot"></div>
+
+<script>
+const perPage = 10;
+let currentPage = 1;
+let currentQuery = '';
+
+async function fetchList(page=1, q='') {
+  const res = await fetch(`/reservations/all?page=${page}&limit=${perPage}&search=${encodeURIComponent(q)}`);
+  return res.json();
+}
+
+function render(rows) {
+  const tbody = document.querySelector('#tbl tbody');
+  tbody.innerHTML = '';
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    const actions = `
+      <button class="btn-small" onclick="approve(${r.reservation_id})">Approve</button>
+      <button class="btn-small" onclick="reject(${r.reservation_id})">Reject</button>
+      <button class="btn-small" onclick="del(${r.reservation_id})">Delete</button>
+      <button class="btn-small" onclick="openPanel(${r.reservation_id})">View codes</button>
+    `;
+    tr.innerHTML = `<td>${r.reservation_id}</td>
+                    <td>${r.customer_name}</td>
+                    <td>${r.phone_number}</td>
+                    <td>${r.total_tickets}</td>
+                    <td>${r.ticket_type}</td>
+                    <td>${r.reservation_date}</td>
+                    <td>${r.status}</td>
+                    <td>${actions}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function loadPage(page=1) {
+  currentPage = page;
+  const data = await fetchList(page, currentQuery);
+  if (!data.success) return alert('Failed to load');
+  render(data.reservations);
+  renderPager(data.page, data.total, data.perPage);
+}
+
+function renderPager(page, total, per) {
+  const pager = document.getElementById('pager');
+  pager.innerHTML = '';
+  const pages = Math.max(1, Math.ceil((total||0)/per));
+  for (let i=1;i<=pages;i++){
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    if (i === page) btn.classList.add('active');
+    btn.onclick = ()=> loadPage(i);
+    pager.appendChild(btn);
+  }
+}
+
+document.getElementById('searchBtn').addEventListener('click', ()=>{
+  currentQuery = document.getElementById('searchInput').value.trim();
+  loadPage(1);
+});
+
+async function approve(id) {
+  if (!confirm('Approve reservation '+id+'?')) return;
+  const res = await fetch(`/reservations/approve/${id}`, { method:'PUT' });
+  const d = await res.json();
+  alert(d.message || JSON.stringify(d));
+  loadPage(currentPage);
+}
+async function reject(id) {
+  if (!confirm('Reject reservation '+id+'?')) return;
+  const res = await fetch(`/reservations/reject/${id}`, { method:'PUT' });
+  const d = await res.json();
+  alert(d.message);
+  loadPage(currentPage);
+}
+async function del(id) {
+  if (!confirm('Delete reservation '+id+'?')) return;
+  const res = await fetch(`/reservations/${id}`, { method:'DELETE' });
+  const d = await res.json();
+  alert(d.message);
+  loadPage(currentPage);
+}
+
+// ------------------------------
+// Panel / Codes / QR actions
+// ------------------------------
+let openPanelReservation = null;
+
+async function openPanel(reservationId) {
+  openPanelReservation = reservationId;
+  // fetch reservation detail (using /reservations/customer by reserv id -> get phone and codes)
+  // server has /reservations/all (search) and /reservations/customer?phone=...; we will fetch reservation record from /reservations/all searching id
+  const resp = await fetch(`/reservations/all?page=1&limit=1&search=${reservationId}`);
+  const rr = await resp.json();
+  // try to find exact
+  let found = null;
+  if (rr && rr.reservations) found = rr.reservations.find(r => r.reservation_id == reservationId);
+  // fallback: call /reservations/customer?phone=
+  let phone = '';
+  let customer_name = '';
+  let codes = [];
+  if (found) {
+    phone = found.phone_number;
+    customer_name = found.customer_name;
+  }
+  // get reservations by phone to extract codes list for exact reservation
+  if (phone) {
+    const c = await fetch(`/reservations/customer?phone=${encodeURIComponent(phone)}`);
+    const cd = await c.json();
+    if (cd && cd.success) {
+      const resObj = cd.reservations.find(r => r.reservation_id == reservationId);
+      if (resObj) {
+        codes = resObj.codes ? (''+resObj.codes).split(',') : [];
+      }
+    }
+  }
+
+  // Also fetch tickets rows for this reservation to see ticket rows (status & hashkey)
+  const t = await fetch(`/reservations/${reservationId}/tickets`);
+  const ticketsResp = await t.json();
+
+  const tickets = ticketsResp.success ? ticketsResp.tickets : [];
+
+  // build panel UI
+  const root = document.getElementById('panelRoot');
+  root.innerHTML = `
+    <div class="panel-modal" id="panelModal">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><strong>Reservation #${reservationId}</strong><div class="muted">${customer_name || ''} — ${found?.ticket_type || ''}</div></div>
+        <div><button onclick="closePanel()">Close</button></div>
+      </div>
+      <hr>
+      <div id="panelContent">
+        <div><strong>Reservation codes</strong></div>
+        <div id="codesLine" style="margin:8px 0">${codes.length? codes.join(', ') : '<span class="muted">none</span>'}</div>
+
+        <div style="margin-top:8px;display:flex;gap:8px;">
+          <button id="genQrBtn">Generate QR(s)</button>
+          <button id="sendAllBtn">Send All via WhatsApp</button>
+          <button id="downloadAllBtn">Download All</button>
+        </div>
+
+        <hr>
+        <div><strong>Tickets</strong></div>
+        <div id="ticketsList" style="margin-top:8px">${tickets.length? '' : '<div class="muted">No tickets found</div>'}</div>
+
+        <div id="panelMsg" style="margin-top:8px"></div>
+      </div>
+    </div>
+  `;
+
+  // populate ticketsList
+  const listDiv = document.getElementById('ticketsList');
+  if (tickets.length) {
+    tickets.forEach(ti => {
+      const thumb = document.createElement('div');
+      thumb.className = 'qr-thumb';
+      // Show if a hashkey exists or not, and if QR file exists
+      const imgSrc = ti.hashfile ? ti.hashfile : '';
+      thumb.innerHTML = `
+        <div><strong>#${ti.ticket_id}</strong></div>
+        <div class="muted" style="font-size:12px">${ti.status}</div>
+        <div style="font-size:12px;margin:6px 0">${ti.hashkey || '<span class="muted">no hash</span>'}</div>
+        <div id="thumbArea-${ti.ticket_id}">${imgSrc ? `<img src="${imgSrc}"><div style="margin-top:6px"><button onclick="downloadSingle('${imgSrc}','QR_${ti.ticket_id}.png')">Download</button></div>` : `<div class="muted">No QR</div>`}</div>
+      `;
+      listDiv.appendChild(thumb);
+    });
+  }
+
+  // attach handlers
+  document.getElementById('genQrBtn').onclick = ()=> generateQrForReservation(reservationId);
+  document.getElementById('sendAllBtn').onclick = ()=> sendAllQrs(reservationId);
+  document.getElementById('downloadAllBtn').onclick = ()=> downloadAllLocal(reservationId);
+}
+
+function closePanel() {
+  document.getElementById('panelRoot').innerHTML = '';
+  openPanelReservation = null;
+}
+
+// generate QR for reservation: calls backend endpoint
+async function generateQrForReservation(reservationId) {
+  const panelMsg = document.getElementById('panelMsg');
+  panelMsg.innerText = 'Generating QRs...';
+  try {
+    const res = await fetch(`/reservations/${reservationId}/generate_qr`, {
+      method: 'POST'
+    });
+    const data = await res.json();
+    if (!data.success) {
+      panelMsg.innerText = 'Failed: ' + (data.message || 'unknown');
+      return;
+    }
+    panelMsg.innerText = 'QR(s) generated.';
+    // update thumbnails with returned qrcodes
+    const ticketsListDiv = document.getElementById('ticketsList');
+    ticketsListDiv.innerHTML = '';
+    data.qrcodes.forEach(q=>{
+      // each q has ticket_id, filename, url
+      const tiHtml = document.createElement('div');
+      tiHtml.className = 'qr-thumb';
+      tiHtml.innerHTML = `
+        <div><strong>Ticket ${q.ticket_id}</strong></div>
+        <div style="margin:6px 0"><img src="${q.url}"></div>
+        <div style="margin-top:6px">
+          <button onclick="sendSingle('${q.url}')">Send</button>
+          <button onclick="downloadSingle('${q.url}', '${q.filename}')">Download</button>
+        </div>
+      `;
+      ticketsListDiv.appendChild(tiHtml);
+    });
+
+  } catch (err) {
+    panelMsg.innerText = 'Error generating QRs: ' + err.message;
+  }
+}
+
+// send all QR images to reservation phone
+async function sendAllQrs(reservationId) {
+  const panelMsg = document.getElementById('panelMsg');
+  panelMsg.innerText = 'Sending QR(s) via WhatsApp...';
+
+  try {
+    const res = await fetch(`/reservations/${reservationId}/send_qrs`, { method: 'POST' });
+    const data = await res.json();
+    if (!data.success) {
+      panelMsg.innerText = 'Send failed: ' + (data.message || JSON.stringify(data));
+      return;
+    }
+    panelMsg.innerText = 'Sent: ' + (data.sent_count || 0) + ' images.';
+  } catch (err) {
+    panelMsg.innerText = 'Send error: ' + err.message;
+  }
+}
+
+// send a single QR (used in generated list)
+async function sendSingle(url) {
+  try {
+    const phone = document.querySelector('#panelRoot .muted') ? '' : '';
+    // call confirmation/send_whatsapp or reservations endpoint - we added reservations/:id/send_qr to server
+    const res = await fetch('/confirmation/send_whatsapp', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ phone_number: document.querySelector('#panelRoot .muted') || '', image_url: url })
+    });
+    const d = await res.json();
+    alert(d.message || JSON.stringify(d));
+  } catch (err) {
+    alert('Send error: ' + err.message);
+  }
+}
+
+// download helpers
+function downloadSingle(url, filename) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename || '';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function downloadAllLocal(reservationId) {
+  // find all <img> inside panel and trigger download
+  const imgs = document.querySelectorAll('#panelRoot img');
+  imgs.forEach((img, i) => {
+    const src = img.src;
+    downloadSingle(src, `qr_${reservationId}_${i}.png`);
+  });
+}
+
+loadPage(1);
+</script>
+<script>
+  fetch('/auth/check')
+    .then(r => r.json())
+    .then(d => {
+      if (!d.loggedIn) {
+        window.location.href = 'login.html';
+      }
+    });
+</script>
+  
+</body>
+</html>

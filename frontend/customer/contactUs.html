@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Addis Old School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --deep-red: #9C0006;
+            --medium-red: #BF2626;
+            --bright-red: #EB5252;
+            --dark-gray: #2d2d2d;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --whatsapp-green: #25D366;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            background-image: radial-gradient(#d1d1d1 0.5px, transparent 0.5px);
+            background-size: 20px 20px; /* Subtle dot pattern */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: var(--deep-red);
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--bright-red);
+        }
+
+        /* Main Section */
+        .contact-container {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 5%;
+            text-align: center;
+        }
+
+        .contact-header h1 {
+            font-size: 3rem;
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .contact-header p {
+            color: #666;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+        }
+
+        /* Contact Cards */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-card {
+            background: var(--white);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card:hover .icon-circle {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .whatsapp-circle { background-color: #e8f9ee; color: var(--whatsapp-green); }
+        .email-circle { background-color: #fff0f0; color: var(--bright-red); }
+
+        .contact-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-gray);
+        }
+
+        .contact-card p {
+            color: #777;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .contact-btn {
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 25px;
+            border-radius: 50px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-whatsapp {
+            background-color: var(--whatsapp-green);
+            color: white;
+        }
+        .btn-whatsapp:hover { background-color: #1ebe57; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
+
+        .btn-email {
+            background-color: var(--dark-gray);
+            color: white;
+        }
+        .btn-email:hover { background-color: #000; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            color: #aaa;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 5rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .contact-header h1 { font-size: 2.2rem; }
+            .navbar { flex-direction: column; padding: 1rem; }
+            .nav-links { margin-top: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="home.html" class="logo">Addis Old School</a>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="customer_reserve.html">Reserve Ticket</a>
+        </div>
+    </nav>
+
+    <main class="contact-container">
+        <header class="contact-header">
+            <h1>Get in Touch</h1>
+            <p>Have questions about the event, venue, or your ticket? Our team is ready to help you.</p>
+        </header>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="icon-circle whatsapp-circle">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>WhatsApp Us</h3>
+                <p>Fastest response for urgent ticketing and payment verification issues.</p>
+                <a href="https://wa.me/251967659950" class="contact-btn btn-whatsapp">
+                    Chat with Support
+                </a>
+            </div>
+
+            <div class="contact-card">
+                <div class="icon-circle email-circle">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>Email Us</h3>
+                <p>For general inquiries, sponsorship, or partnership opportunities.</p>
+                <a href="mailto:celloviolin24@gmail.com" class="contact-btn btn-email">
+                    Send an Email
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Sound Solution Events © 2025. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
